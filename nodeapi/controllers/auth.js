@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+require('dotenv').config();
 
 exports.signup = async (req, res) => {
     const userExists = await User.findOne({
@@ -14,4 +16,43 @@ exports.signup = async (req, res) => {
     res.status(200).json({
         message: 'Signup success! Please login.'
     });
+}
+
+exports.signin = async (req, res) => {
+    // find user based on email
+    const { email, password } = req.body;
+    User.findOne({ email }, (err, user) => {
+        if (err || !user) {
+            return res.status(401).json({
+                error: 'User with that email does not exist. Please signin.'
+            });
+        }
+        // if found
+        // validate email and password
+        // create method in model
+        if (!user.authenticate(password)) {
+            return res.status(401).json({
+                error: 'Email and password do not match.'
+            });
+        }
+        // generate token
+        const token = jwt.sign({
+            _id: user._id,
+            name: user.name
+        }, process.env.JWT_SECRET);
+
+        // generate cookies
+        res.cookie("t", token, {
+            expired: new Date() + 9999
+        });
+
+        const { _id, name, email } = user;
+        return res.json({
+            token,
+            user:{ _id, name, email }
+        });
+
+    });
+
+
 }
