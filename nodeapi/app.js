@@ -1,9 +1,14 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 
 /** bring routes here */
 
 const { getPosts } = require('./routes/post');
+
+// middlware 
+app.use(morgan('dev'));
+
 
 app.get("/", getPosts);
 
