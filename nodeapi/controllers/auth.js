@@ -39,8 +39,8 @@ exports.signin = async (req, res) => {
         }
         // generate token
         const token = jwt.sign({
-            _id: user._id,
-            name: user.name
+            _id: user._id
+            // name: user.name
         }, process.env.JWT_SECRET);
 
         // generate cookies
