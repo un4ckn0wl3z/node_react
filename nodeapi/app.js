@@ -4,13 +4,12 @@ const morgan = require('morgan');
 
 /** bring routes here */
 
-const { getPosts } = require('./routes/post');
+const postRoutes = require('./routes/post');
 
 // middlware 
 app.use(morgan('dev'));
 
-
-app.get("/", getPosts);
+app.use("/", postRoutes);
 
 const port = 8080;
 app.listen(port, () => {
