@@ -17,12 +17,16 @@ mongoose.connection.on('error', err => {
 /** bring routes here */
 
 const postRoutes = require('./routes/post');
+const authRoutes = require('./routes/auth');
+
 
 // middlware 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 app.use("/posts", postRoutes);
+app.use("/auth", authRoutes);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
