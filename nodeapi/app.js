@@ -30,6 +30,14 @@ app.use(cookieParser());
 app.use("/posts", postRoutes);
 app.use("/auth", authRoutes);
 
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send({
+            error: 'Unauthorized.'
+        });
+    }
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
