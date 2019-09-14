@@ -28,7 +28,7 @@ exports.hasAuthorization = (req, res, next) => {
 
 exports.allUsers = (req, res) => {
     User.find((err, users) => {
-        if(err){
+        if (err) {
             return res.status(400).send({
                 error: err
             });
@@ -51,7 +51,7 @@ exports.updateUser = (req, res, next) => {
     user = _.extend(user, req.body);
     user.updated = Date.now();
     user.save((err) => {
-        if(err){
+        if (err) {
             return res.status(400).send({
                 error: 'You are not authorized to perform this action.'
             });
@@ -63,4 +63,20 @@ exports.updateUser = (req, res, next) => {
         });
     });
 
+}
+
+exports.deleteUser = (req, res) => {
+    let user = req.profile;
+    user.remove((err, user) => {
+        if (err) {
+            return res.status(400).send({
+                error: err
+            });
+        }
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json({
+            user
+        });
+    });
 }
