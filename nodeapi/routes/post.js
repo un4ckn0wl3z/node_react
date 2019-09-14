@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPosts, createPost } = require('../controllers/post');
+const { getPosts, createPost, postsByUser } = require('../controllers/post');
 const { requiredSignin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 
@@ -8,7 +8,8 @@ const router = express.Router();
 const { createPostValidator } = require('../validator');
 
 router.get('/', getPosts);
-router.post('/', requiredSignin, createPostValidator, createPost);
+router.post('/new/:userId', requiredSignin, createPost, createPostValidator);
+router.get('/by/:userId', requiredSignin, postsByUser);
 
 // any route contain userId
 router.param("userId", userById);
