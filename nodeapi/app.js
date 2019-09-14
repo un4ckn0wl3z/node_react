@@ -22,7 +22,7 @@ const postRoutes = require('./routes/post');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
-app.use("/", postRoutes);
+app.use("/posts", postRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
