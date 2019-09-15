@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { signin } from '../auth';
+
 
 class Signin extends Component {
     constructor() {
@@ -29,22 +31,6 @@ class Signin extends Component {
         }
     }
 
-    signin = user => {
-        return fetch("http://localhost:8080/auth/signin", {
-            method: 'POST',
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user)
-        }).then(res => {
-            return res.json();
-        }).catch(err => {
-            console.log(err);
-        });
-    }
-
-
     clieckSubmit = event => {
         event.preventDefault();
         this.setState({
@@ -56,7 +42,7 @@ class Signin extends Component {
             password
         }
 
-        this.signin(user).then(data => {
+        signin(user).then(data => {
             if (data.error) {
                 this.setState({
                     error: data.error,
