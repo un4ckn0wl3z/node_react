@@ -3,6 +3,21 @@ const formidable = require('formidable');
 const fs = require('fs');
 
 
+exports.postById = (req, res, next, id) => {
+    Post.findById(id)
+        .populate('postedBy', '_id name')
+        .exec((err, post) => {
+            if (err || !post) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            req.post = post;
+            next();
+        });
+}
+
+
 exports.getPosts = (req, res) => {
     const posts = Post.find()
         .populate('postedBy', '_id name')
@@ -61,8 +76,41 @@ exports.postsByUser = (req, res) => {
                     error: err
                 });
             }
-        res.json(posts);            
+            res.json(posts);
 
         });
 }
+
+
+exports.isPoster = (req, res, next) => {
+    let isPoster = req.post && req.auth && req.post.postedBy._id == req.auth._id;
+
+    console.log('isPoster ',isPoster);
+    console.log('req.auth ', req.auth);
+    console.log('req.post ', req.post);
+    console.log('req.post.postedBy ', req.post.postedBy);
+
+    if (!isPoster) {
+        return res.status(403).json({
+            error: 'User is not authorized.'
+        });
+    }
+    next();
+}
+
+exports.deletePost = (req, res) => {
+    let post = req.post;
+    post.remove((err, post) => {
+        if (err) {
+            return res.status(403).json({
+                error: err
+            });
+        }
+        res.json({
+            post
+        });
+    });
+}
+
+
 
