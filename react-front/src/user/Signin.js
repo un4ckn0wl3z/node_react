@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 
-class Signup extends Component {
+class Signin extends Component {
     constructor() {
         super();
         this.state = {
-            name: "",
             email: "",
             password: "",
             error: "",
-            open: false
         }
     }
 
     handleChange = (name) => (event) => {
         this.setState({
             error: "",
-            open: false
         });
         this.setState({
             [name]: event.target.value
@@ -40,9 +37,8 @@ class Signup extends Component {
 
     clieckSubmit = event => {
         event.preventDefault();
-        const { name, email, password } = this.state;
+        const { email, password } = this.state;
         const user = {
-            name,
             email,
             password
         }
@@ -54,23 +50,17 @@ class Signup extends Component {
                 });
             } else {
                 this.setState({
-                    name: "",
                     email: "",
                     password: "",
-                    error: "",
-                    open: true
+                    error: ""
                 });
             }
         });
 
     }
 
-    signupForm = (name, email, password) => (
+    signinForm = (email, password) => (
         <form>
-            <div className="form-group">
-                <label className="text-muted">Name</label>
-                <input onChange={this.handleChange("name")} type="text" className="form-control" value={name} />
-            </div>
             <div className="form-group">
                 <label className="text-muted">email</label>
                 <input onChange={this.handleChange("email")} type="email" className="form-control" value={email} />
@@ -84,17 +74,15 @@ class Signup extends Component {
     )
 
     render() {
-        const { name, email, password, error, open } = this.state;
+        const { email, password, error } = this.state;
         return (
             <div className="container" >
-                <h2 className="mt-5 mb-5" >Sign Up</h2>
-
+                <h2 className="mt-5 mb-5" >Sign In</h2>
                 <div className="alert alert-danger" style={{ display: error ? "" : 'none' }} >{error}</div>
-                <div className="alert alert-info" style={{ display: open ? "" : 'none' }} >New account is successfully created. Please sign In.</div>
-                {this.signupForm(name, email, password)}
+                {this.signinForm(email, password)}
             </div>
         );
     }
 }
 
-export default Signup;
+export default Signin;
