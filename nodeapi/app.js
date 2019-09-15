@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -16,12 +17,22 @@ mongoose.connection.on('error', err => {
 });
 
 /** bring routes here */
-
 const postRoutes = require('./routes/post');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 
-
+/** api docs */
+app.get('/', (req, res) => {
+    fs.readFile('./docs/apiDocs.json', (err, data) => {
+        if (err) {
+            res.status(400).send({
+                error: err
+            });
+        }
+        const docs = JSON.parse(data);
+        res.json(docs);
+    });
+});
 
 // middleware 
 app.use(morgan('dev'));
