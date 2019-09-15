@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { signin } from '../auth';
+import { signin, authenticate } from '../auth';
 
 
 class Signin extends Component {
@@ -24,13 +24,6 @@ class Signin extends Component {
         });
     }
 
-    authenticate = (jwt, next) => {
-        if (typeof window !== "undefined") {
-            localStorage.setItem("jwt", JSON.stringify(jwt));
-            next();
-        }
-    }
-
     clieckSubmit = event => {
         event.preventDefault();
         this.setState({
@@ -50,7 +43,7 @@ class Signin extends Component {
                 });
             } else {
                 // authenticate
-                this.authenticate(data, () => {
+                authenticate(data, () => {
                     this.setState({
                         redirectToReferer: true
                     });

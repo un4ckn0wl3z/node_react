@@ -28,3 +28,25 @@ export const signin = user => {
         console.log(err);
     });
 }
+
+
+export const authenticate = (jwt, next) => {
+    if (typeof window !== "undefined") {
+        localStorage.setItem("jwt", JSON.stringify(jwt));
+        next();
+    }
+}
+
+export const signout = next => {
+    if (typeof window !== "undefined") {
+        localStorage.removeItem("jwt");
+        next();
+        return fetch("http://localhost:8080/auth/signout", {
+            method: 'GET'
+        }).then(res => {
+            return res.json();
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+}
