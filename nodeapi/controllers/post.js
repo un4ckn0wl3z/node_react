@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 const formidable = require('formidable');
 const fs = require('fs');
+const _ = require('lodash');
 
 
 exports.postById = (req, res, next, id) => {
@@ -84,12 +85,7 @@ exports.postsByUser = (req, res) => {
 
 exports.isPoster = (req, res, next) => {
     let isPoster = req.post && req.auth && req.post.postedBy._id == req.auth._id;
-
-    console.log('isPoster ',isPoster);
-    console.log('req.auth ', req.auth);
-    console.log('req.post ', req.post);
-    console.log('req.post.postedBy ', req.post.postedBy);
-
+    
     if (!isPoster) {
         return res.status(403).json({
             error: 'User is not authorized.'
@@ -110,6 +106,23 @@ exports.deletePost = (req, res) => {
             post
         });
     });
+}
+
+exports.updatePost = (req, res, next) => {
+    let post = req.post;
+    post = _.extend(post, req.body);
+    post.updated = Date.now();
+    post.save((err) => {
+        if (err) {
+            return res.status(400).send({
+                error: 'You are not authorized to perform this action.'
+            });
+        }
+        res.json({
+            post
+        });
+    });
+
 }
 
 
