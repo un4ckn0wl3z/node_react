@@ -33,7 +33,7 @@ const Menu = ({ history }) => (
                         <a className="nav-link" onClick={() => signout(() => history.push('/'))} style={{ cursor: "pointer", color: "#ffffff" }} >Sign Out</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link">{isAuthenticated().user.name}</a>
+                        <Link className="nav-link" style={{ color: "#ffffff" }} to={`/user/${isAuthenticated().user._id}`}> {`${isAuthenticated().user.name}'s profile`} </Link> 
                     </li>
                 </>
             )}
