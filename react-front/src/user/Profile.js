@@ -11,19 +11,29 @@ class Profile extends Component {
         }
     }
 
-    componentDidMount() {
-        const userId = this.props.match.params.userId;
-        fetch(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
+    read = (userId, token) => {
+        return fetch(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
             method: 'GET',
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${isAuthenticated().token}`
+                Authorization: `Bearer ${token}`
             },
         })
             .then(response => {
                 return response.json();
-            }).then(data => {
+            })
+            .catch(err => {
+                this.setState({
+                    redirectToSignin: true
+                });
+            });
+    }
+
+    init = (userId) => {
+        const token = isAuthenticated().token;
+        this.read(userId, token)
+            .then(data => {
                 if (data.error) {
                     this.setState({
                         redirectToSignin: true
@@ -39,6 +49,12 @@ class Profile extends Component {
                     redirectToSignin: true
                 });
             });
+    }
+
+    componentDidMount() {
+        const userId = this.props.match.params.userId;
+        this.init(userId);
+
     }
 
     render() {
