@@ -16,3 +16,17 @@ export const read = (userId, token) => {
             });
         });
 }
+
+export const list = (token) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/users`, {
+        method: 'GET'
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            this.setState({
+                redirectToSignin: true
+            });
+        });
+}
