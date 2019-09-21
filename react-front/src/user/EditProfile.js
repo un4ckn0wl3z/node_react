@@ -121,7 +121,7 @@ class EditProfile extends Component {
 
             <div className="form-group">
                 <label className="text-muted">Profile Photo</label>
-                <input onChange={this.handleChange("phpto")} type="file" accept="image/*" className="form-control" />
+                <input onChange={this.handleChange("photo")} type="file" accept="image/*" className="form-control" />
             </div>
 
             <div className="form-group">

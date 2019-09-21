@@ -9,8 +9,8 @@ const userSchema = mongoose.Schema({
     salt: String,
     created: { type: Date, default: Date.now },
     updated: Date,
-    photo: { type: Buffer, contentType: String }
-    
+    photo: { data: Buffer, contentType: String }
+
 
 });
 

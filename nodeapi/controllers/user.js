@@ -90,7 +90,7 @@ exports.updateUser = (req, res, next) => {
             }
             user.hashed_password = undefined;
             user.salt = undefined;
-            res.status(400).json(user);
+            res.json(user);
         });
 
     });
