@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { isAuthenticated } from '../auth';
 import { read, update } from './apiUser';
 import { Redirect } from 'react-router-dom';
+import defaultProfileImg from '../img/default-user.png';
 
 class EditProfile extends Component {
 
@@ -88,14 +89,14 @@ class EditProfile extends Component {
         });
 
         const value = name === 'photo' ? event.target.files[0] : event.target.value;
-        if(!(name === 'password' && event.target.value === '')){
+        if (!(name === 'password' && event.target.value === '')) {
             this.userData.set(name, value);
         }
         this.setState({
             [name]: value
         });
 
-        if (name === 'photo'){
+        if (name === 'photo') {
             const fileSize = event.target.files[0].size;
             this.setState({
                 fileSize
@@ -109,7 +110,7 @@ class EditProfile extends Component {
         if (this.isValid()) {
             this.setState({
                 loading: true
-            });    
+            });
             const token = isAuthenticated().token;
             const userId = this.props.match.params.userId;
 
@@ -165,16 +166,18 @@ class EditProfile extends Component {
         if (redirectToProfile) {
             return <Redirect to={`/user/${id}`} />
         }
+        const photoUrl = id ? `${process.env.REACT_APP_API_PHOTO_URL}/${id}?${new Date().getTime()}` : defaultProfileImg;
 
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5" >Edit Profile</h2>
                 <div className="alert alert-danger" style={{ display: error ? "" : 'none' }} >{error}</div>
-                {loading ? 
+                {loading ?
                     <div className="jumbotron text-center" >
                         <h2>Loading...</h2>
-                    </div> 
-                : ""}
+                    </div>
+                    : ""}
+                <img onError={val => { val.target.src = `${defaultProfileImg}` }} className="img-thumbnail" style={{ height: "200px", width: 'auto' }} src={photoUrl} alt={name} />
                 {this.signupForm(name, email, password)}
 
             </div>
