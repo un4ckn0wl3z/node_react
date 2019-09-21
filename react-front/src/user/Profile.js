@@ -55,7 +55,7 @@ class Profile extends Component {
 
         return (
             <div className="container">
-                 <h2 className="mt-5 mb-5" >Profile</h2>
+                <h2 className="mt-5 mb-5" >Profile</h2>
                 <div className="row">
                     <div className="col-md-6">
                         <img className="card-img-top" src={defaultProfileImg} alt={user.name} style={{ width: '100%', height: '15vw', objectFit: 'cover' }} />
@@ -71,7 +71,7 @@ class Profile extends Component {
                             && (
                                 <div className="d-inline-black mt-5">
                                     <Link to={`/user/edit/${user._id}`} className="btn btn-raised btn-success mr-5">Edit Profile</Link>
-                                    <DeleteUser />
+                                    <DeleteUser userId={user._id} />
                                 </div>
                             )
                         }
