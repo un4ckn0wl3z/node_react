@@ -14,12 +14,22 @@ class EditProfile extends Component {
             password: "",
             redirectToProfile: false,
             error: "",
-            loading: false
+            loading: false,
+            fileSize: 0
         }
     }
 
     isValid = () => {
-        const { name, email, password } = this.state;
+        const { name, email, password, fileSize } = this.state;
+
+        if (fileSize > 100000) {
+            this.setState({
+                error: "File size should be less than 100kb."
+            });
+
+            return false;
+        }
+
         if (name.length === 0) {
             this.setState({
                 error: "Name is required."
@@ -76,20 +86,30 @@ class EditProfile extends Component {
         this.setState({
             error: ""
         });
+
         const value = name === 'photo' ? event.target.files[0] : event.target.value;
-        this.userData.set(name, value);
+        if(!(name === 'password' && event.target.value === '')){
+            this.userData.set(name, value);
+        }
         this.setState({
             [name]: value
         });
+
+        if (name === 'photo'){
+            const fileSize = event.target.files[0].size;
+            this.setState({
+                fileSize
+            });
+        }
     }
 
     clieckSubmit = event => {
         event.preventDefault();
-        this.setState({
-            loading: true
-        });
 
         if (this.isValid()) {
+            this.setState({
+                loading: true
+            });    
             const token = isAuthenticated().token;
             const userId = this.props.match.params.userId;
 
