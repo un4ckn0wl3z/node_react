@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
     created: { type: Date, default: Date.now },
     updated: Date,
     photo: { type: Buffer, contentType: String }
+    
 
 });
 
