@@ -58,7 +58,7 @@ exports.createPost = (req, res, next) => {
                     error: err
                 });
             }
-            res.status(400).json(result);
+            res.json(result);
         });
 
     });
