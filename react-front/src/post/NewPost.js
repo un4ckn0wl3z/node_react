@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { isAuthenticated } from '../auth';
 import { create } from './apiPost';
 import { Redirect } from 'react-router-dom';
-import defaultProfileImg from '../img/default-user.png';
+// import defaultProfileImg from '../img/default-user.png';
 
 class NewPost extends Component {
 
