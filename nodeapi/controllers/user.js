@@ -4,17 +4,21 @@ const formidable = require('formidable');
 const fs = require('fs');
 
 exports.userById = (req, res, next, id) => {
-    User.findById(id).exec((err, user) => {
-        if (err || !user) {
-            return res.status(400).json({
-                error: 'User not found'
-            });
-        }
+    User.findById(id)
+        // populate
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                    error: 'User not found'
+                });
+            }
 
-        req.profile = user; // adds profile object to req with user info
-        next();
+            req.profile = user; // adds profile object to req with user info
+            next();
 
-    });
+        });
 }
 
 exports.hasAuthorization = (req, res, next) => {
@@ -119,4 +123,42 @@ exports.userPhoto = (req, res, next) => {
         return res.send(req.profile.photo.data);
     }
     next();
+}
+
+/** follow and unfollow */
+exports.addFollowing = (req, res, next) => {
+    User.findByIdAndUpdate(req.body.userId, {
+        $push: {
+            following: req.body.followId
+        }
+    }, (err, result) => {
+        if (err) {
+            return res.status(400).send({
+                error: err
+            });
+        }
+        // ------------------------------------
+        next();
+    });
+
+}
+
+exports.addFollower = (req, res) => {
+    User.findByIdAndUpdate(req.body.followId, {
+        $push: { followers: req.body.userId }
+    },
+        { new: true })
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).send({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+
+        });
 }
