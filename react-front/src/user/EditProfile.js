@@ -106,7 +106,7 @@ class EditProfile extends Component {
         }
     }
 
-    clieckSubmit = event => {
+    clickSubmit = event => {
         event.preventDefault();
 
         if (this.isValid()) {
@@ -167,7 +167,7 @@ class EditProfile extends Component {
                 <label className="text-muted">Password</label>
                 <input onChange={this.handleChange("password")} type="password" className="form-control" value={password} />
             </div>
-            <button onClick={this.clieckSubmit} className="btn btn-primary btn-raised">Update</button>
+            <button onClick={this.clickSubmit} className="btn btn-primary btn-raised">Update</button>
         </form>
     )
 

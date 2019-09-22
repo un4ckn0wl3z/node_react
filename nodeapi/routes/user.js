@@ -9,7 +9,8 @@ const {
     addFollowing, 
     addFollower,
     removeFollowing,
-    removeFollower
+    removeFollower,
+    findPeople
 } = require('../controllers/user');
 
 const router = express.Router();
@@ -27,7 +28,8 @@ router.delete('/:userId', requiredSignin, deleteUser);
 // get user image
 router.get('/photo/:userId', userPhoto);
 
-
+// who to follow
+router.get('/findpeople/:userId', requiredSignin, findPeople);
 
 // any route contain userId
 router.param("userId", userById);

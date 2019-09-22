@@ -24,7 +24,7 @@ class Signin extends Component {
         });
     }
 
-    clieckSubmit = event => {
+    clickSubmit = event => {
         event.preventDefault();
         this.setState({
             loading: true
@@ -65,7 +65,7 @@ class Signin extends Component {
                 <label className="text-muted">Password</label>
                 <input onChange={this.handleChange("password")} type="password" className="form-control" value={password} />
             </div>
-            <button onClick={this.clieckSubmit} className="btn btn-primary btn-raised">Submit</button>
+            <button onClick={this.clickSubmit} className="btn btn-primary btn-raised">Submit</button>
         </form>
     )
 
