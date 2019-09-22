@@ -16,7 +16,8 @@ class EditProfile extends Component {
             redirectToProfile: false,
             error: "",
             loading: false,
-            fileSize: 0
+            fileSize: 0,
+            about: ""
         }
     }
 
@@ -71,7 +72,8 @@ class EditProfile extends Component {
                         id: data._id,
                         name: data.name,
                         email: data.email,
-                        error: ""
+                        error: "",
+                        about: data.about
                     });
                 }
             })
@@ -137,7 +139,7 @@ class EditProfile extends Component {
     }
 
 
-    signupForm = (name, email, password) => (
+    signupForm = (name, email, about, password) => (
         <form>
 
             <div className="form-group">
@@ -153,6 +155,12 @@ class EditProfile extends Component {
                 <label className="text-muted">email</label>
                 <input onChange={this.handleChange("email")} type="email" className="form-control" value={email} />
             </div>
+
+            <div className="form-group">
+                <label className="text-muted">About</label>
+                <textarea onChange={this.handleChange("about")} type="text" className="form-control" value={about} />
+            </div>
+
             <div className="form-group">
                 <label className="text-muted">Password</label>
                 <input onChange={this.handleChange("password")} type="password" className="form-control" value={password} />
@@ -162,7 +170,7 @@ class EditProfile extends Component {
     )
 
     render() {
-        const { id, name, email, password, redirectToProfile, error, loading } = this.state;
+        const { id, name, email, password, redirectToProfile, error, loading, about } = this.state;
         if (redirectToProfile) {
             return <Redirect to={`/user/${id}`} />
         }
@@ -178,7 +186,7 @@ class EditProfile extends Component {
                     </div>
                     : ""}
                 <img onError={val => { val.target.src = `${defaultProfileImg}` }} className="img-thumbnail" style={{ height: "200px", width: 'auto' }} src={photoUrl} alt={name} />
-                {this.signupForm(name, email, password)}
+                {this.signupForm(name, email, about, password)}
 
             </div>
         );

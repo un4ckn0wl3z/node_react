@@ -9,9 +9,8 @@ const userSchema = mongoose.Schema({
     salt: String,
     created: { type: Date, default: Date.now },
     updated: Date,
-    photo: { data: Buffer, contentType: String }
-
-
+    photo: { data: Buffer, contentType: String },
+    about: { type: String, trim: true }
 });
 
 // virtual field
