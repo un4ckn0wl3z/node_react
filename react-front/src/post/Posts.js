@@ -25,25 +25,37 @@ class Posts extends Component {
         });
     }
 
-    renderPosts = (posts) => (
-        <div className="row">
-            {
-                posts.map((post, i) =>
-                    (
+    renderPosts = (posts) => {
+        return (
 
-                        <div key={i} className="card col-md-4">
-                            <div className="card-body">
-                                <h5 className="card-title">{post.title}</h5>
-                                <p className="card-text">{post.body}</p>
-                                <Link to={`/post/${post._id}`} className="btn btn-raised btn-sm btn-primary">Read more</Link>
+            <div className="row">
+                {
+                    posts.map((post, i) => {
+                        const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
+                        const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+                        return (
+                            < div key={i} className="card col-md-4" >
+                                <div className="card-body">
+                                    <h5 className="card-title">{post.title.substring(0, 30)}</h5>
+                                    <p className="card-text">{post.body.substring(0, 150) + '...'}</p>
+                                    <br />
+                                    <p className="font-italic mark">
+                                        Posted by <Link to={`${posterId}`}>{posterName}</Link> on {new Date(post.created).toDateString()}
+                                    </p>
+                                    <Link to={`/post/${post._id}`} className="btn btn-raised btn-sm btn-primary">Read more</Link>
+                                </div>
                             </div>
-                        </div>
+                        );
+                    }
                     )
-                )
+                }
+            </div>
 
-            }
-        </div>
-    )
+        );
+    }
+
+
+
 
     render() {
         const { posts } = this.state;

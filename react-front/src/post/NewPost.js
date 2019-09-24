@@ -55,7 +55,12 @@ class NewPost extends Component {
         });
 
         if (name === 'photo') {
-            const fileSize = event.target.files[0].size;
+            let fileSize = undefined
+           try {
+               fileSize = event.target.files[0].size;
+           } catch (error) {
+               
+           }
             this.setState({
                 fileSize
             });

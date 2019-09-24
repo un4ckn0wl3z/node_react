@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPosts, createPost, postsByUser, postById, isPoster, deletePost, updatePost } = require('../controllers/post');
+const { getPosts, createPost, postsByUser, postById, isPoster, deletePost, updatePost, postPhoto } = require('../controllers/post');
 const { requiredSignin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 
@@ -13,6 +13,10 @@ router.get('/by/:userId', requiredSignin, postsByUser);
 router.delete('/:postId', requiredSignin, isPoster, deletePost);
 router.put('/:postId', requiredSignin, isPoster, updatePost);
 
+
+
+// get user image
+router.get('/photo/:postId', postPhoto);
 
 // any route contain userId
 router.param("userId", userById);
