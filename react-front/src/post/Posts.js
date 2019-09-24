@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { list } from './apiPost';
-// import defaultProfileImg from '../img/default-user.png';
+import defaultPostImg from '../img/default-post.jpg';
 import { Link } from 'react-router-dom';
 
 class Posts extends Component {
@@ -10,7 +10,7 @@ class Posts extends Component {
             posts: []
         }
 
-        this.photoUrl = `${process.env.REACT_APP_API_PHOTO_URL}`;
+        this.photoUrl = `${process.env.REACT_APP_API_POST_PHOTO_URL}`;
     }
 
     componentDidMount() {
@@ -36,6 +36,11 @@ class Posts extends Component {
                         return (
                             < div key={i} className="card col-md-4" >
                                 <div className="card-body">
+                                <img className="img-thumbnail" style={{ height: "200px", width: 'auto' }}
+                                onError={i => {
+                                    i.target.src = `${defaultPostImg}`
+                                }}
+                                src={`${this.photoUrl}/${post._id}?${new Date().getTime()}`} alt={post.title.substring(0, 30)} />
                                     <h5 className="card-title">{post.title.substring(0, 30)}</h5>
                                     <p className="card-text">{post.body.substring(0, 150) + '...'}</p>
                                     <br />
