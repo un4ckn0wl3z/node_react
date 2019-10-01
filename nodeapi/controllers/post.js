@@ -23,7 +23,7 @@ exports.getPosts = (req, res) => {
     const posts = Post.find()
         .populate('postedBy', '_id name')
         .select('_id title body created')
-        .sort({created: -1})
+        .sort({ created: -1 })
         .then(posts => {
             res.json(posts);
         }).catch(err => {
@@ -84,7 +84,7 @@ exports.postsByUser = (req, res) => {
 
 exports.isPoster = (req, res, next) => {
     let isPoster = req.post && req.auth && req.post.postedBy._id == req.auth._id;
-    
+
     if (!isPoster) {
         return res.status(403).json({
             error: 'User is not authorized.'
@@ -131,6 +131,10 @@ exports.postPhoto = (req, res, next) => {
         return res.send(req.post.photo.data);
     }
     next();
+}
+
+exports.singlePost = (req, res, ) => {
+    return res.send(req.post);
 }
 
 
