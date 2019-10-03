@@ -62,6 +62,7 @@ class Profile extends Component {
                         user: data,
                         following
                     });
+                    this.loadPosts(data._id);
                 }
             })
             .catch(err => {
@@ -69,6 +70,20 @@ class Profile extends Component {
                     redirectToSignin: true
                 });
             });
+    }
+
+
+    loadPosts = (userId) => {
+        const token = isAuthenticated().token;
+        listByUser(userId, token).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.setState({
+                    posts: data
+                });
+            }
+        });
     }
 
     componentDidMount() {
@@ -84,7 +99,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { redirectToSignin, user } = this.state;
+        const { redirectToSignin, user, posts } = this.state;
         if (redirectToSignin) return <Redirect to="/signin" />
         const photoUrl = user._id ? `${process.env.REACT_APP_API_PHOTO_URL}/${user._id}?${new Date().getTime()}` : defaultProfileImg;
 
@@ -118,7 +133,7 @@ class Profile extends Component {
                         <hr />
                         <p className="lead">{user.about}</p>
                         <hr />
-                        <ProfileTabs followers={user.followers} following={user.following} />
+                        <ProfileTabs followers={user.followers} following={user.following} posts={posts} />
 
                     </div>
                 </div>
