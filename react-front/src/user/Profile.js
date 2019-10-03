@@ -16,7 +16,7 @@ class Profile extends Component {
             redirectToSignin: false,
             following: false,
             error: "",
-            posts: ""
+            posts: []
         }
     }
 
@@ -107,10 +107,10 @@ class Profile extends Component {
             <div className="container">
                 <h2 className="mt-5 mb-5" >Profile</h2>
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <img onError={val => { val.target.src = `${defaultProfileImg}` }} className="img-thumbnail" style={{ height: "200px", width: 'auto' }} src={photoUrl} alt={user.name} />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-8">
                         <div className="lead mt-2">
                             <p>Hello {user.name}</p>
                             <p>Email: {user.email}</p>
@@ -120,6 +120,7 @@ class Profile extends Component {
                             isAuthenticated().user && isAuthenticated().user._id === user._id
                                 ? (
                                     <div className="d-inline-black mt-5">
+                                        <Link to={`/post/create/`} className="btn btn-raised btn-info mr-5">Create Post</Link>
                                         <Link to={`/user/edit/${user._id}`} className="btn btn-raised btn-success mr-5">Edit Profile</Link>
                                         <DeleteUser userId={user._id} />
                                     </div>
