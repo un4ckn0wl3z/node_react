@@ -6,7 +6,7 @@ import defaultProfileImg from '../img/default-user.png';
 import DeleteUser from './DeleteUser';
 import FollowProfileButton from './FollowProfileButton';
 import ProfileTabs from './ProfileTabs';
-
+import { listByUser } from '../post/apiPost';
 
 class Profile extends Component {
     constructor() {
@@ -15,7 +15,8 @@ class Profile extends Component {
             user: { following: [], followers: [] },
             redirectToSignin: false,
             following: false,
-            error: ""
+            error: "",
+            posts: ""
         }
     }
 
