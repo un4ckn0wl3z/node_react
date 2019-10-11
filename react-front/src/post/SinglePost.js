@@ -31,7 +31,6 @@ class SinglePost extends Component {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
         return (
-
             <div className="card-body">
                 <img className="img-thumbnail" style={{ height: "200px", width: '100%', objectFit: 'cover' }}
                     onError={i => {
@@ -44,7 +43,10 @@ class SinglePost extends Component {
                 <p className="font-italic mark">
                     Posted by <Link to={`${posterId}`}>{posterName}</Link> on {new Date(post.created).toDateString()}
                 </p>
-                <Link to={`/`} className="btn btn-raised btn-sm btn-primary">Back</Link>
+                <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
+                <button className="btn btn-raised btn-sm btn-warning mr-5">Update</button>
+                <button className="btn btn-raised btn-sm btn-danger">Delete</button>
+
             </div>
 
         );
@@ -55,11 +57,11 @@ class SinglePost extends Component {
         return (
             <div className="container">
                 <h2 className="display-2 mt-5 mb-5" >{post.title}</h2>
-                {!post ? 
+                {!post ?
                     <div className="jumbotron text-center" >
                         <h2>Loading...</h2>
-                    </div> 
-                : ""}
+                    </div>
+                    : ""}
                 {this.renderPost(post)}
             </div>
         );
