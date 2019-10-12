@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { singlePost, remove } from './apiPost';
+import { singlePost, remove, like, unlike } from './apiPost';
 import { Link } from 'react-router-dom';
 import defaultPostImg from '../img/default-post.jpg';
 import { isAuthenticated } from '../auth';
@@ -12,11 +12,22 @@ class SinglePost extends Component {
         this.state = {
             post: '',
             userAuth: '',
+            redirectTLogin: false,
             redirectToHome: false,
+            like: false,
+            likes: 0
 
         }
         this.photoUrl = `${process.env.REACT_APP_API_POST_PHOTO_URL}`;
     }
+
+    checkLike = (likes) => {
+        const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
+        let match = likes.indexOf(userId) !== -1;
+        return match;
+    }
+
+
     componentDidMount = () => {
         const postId = this.props.match.params.postId;
         const userAuth = isAuthenticated().user;
@@ -29,7 +40,33 @@ class SinglePost extends Component {
             } else {
                 this.setState({
                     post: data,
-                    userAuth
+                    userAuth,
+                    likes: data.likes.length,
+                    like: this.checkLike(data.likes)
+                });
+            }
+        });
+    }
+
+    likeToggle = () => {
+        if (!isAuthenticated()) {
+            this.setState({
+                redirectTLogin: true
+            });
+            return;
+        }
+
+        let callApi = this.state.like ? unlike : like;
+        const userId = isAuthenticated().user._id;
+        const postId = this.state.post._id;
+        const token = isAuthenticated().token;
+        callApi(userId, token, postId).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.setState({
+                    like: !this.state.like,
+                    likes: data.likes.length
                 });
             }
         });
@@ -59,6 +96,7 @@ class SinglePost extends Component {
     renderPost = (post, isAuth) => {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+        const { like, likes } = this.state;
         return (
             <div className="card-body">
                 <img className="img-thumbnail" style={{ height: "200px", width: '100%', objectFit: 'cover' }}
@@ -66,7 +104,21 @@ class SinglePost extends Component {
                         i.target.src = `${defaultPostImg}`
                     }}
                     src={`${this.photoUrl}/${post._id}?${new Date().getTime()}`} />
+                <div className="mt-2">
+                    {like ? (
+                        <h3 onClick={this.likeToggle}>
+                            <i className="fa fa-thumbs-up text-success bg-dark" style={{ padding: '10px', borderRadius: '50%' }} />{" "}
+                            {likes} Like
+                        </h3>
+                    ) : (
+                        <h3 onClick={this.likeToggle}>
+                            <i className="fa fa-thumbs-up text-warning bg-dark" style={{ padding: '10px', borderRadius: '50%' }} />{" "}
+                            {likes} Like
+                        </h3>
+                        )
 
+                    }
+                </div>
                 <p className="card-text">{post.body}</p>
                 <br />
                 <p className="font-italic mark">
@@ -86,16 +138,20 @@ class SinglePost extends Component {
     }
 
     render() {
-        const { post, userAuth, redirectToHome } = this.state;
-        const uid = userAuth._id;
+        const { post, userAuth, redirectToHome, redirectTLogin } = this.state;
+        if (redirectTLogin) {
+            return <Redirect to={`/signin`} />
+        }
+        if (redirectToHome) {
+            return <Redirect to={`/`} />
+        }
+        const uid = userAuth ? userAuth._id : '';
         const pid = post.postedBy ? `${post.postedBy._id}` : "";
         let isAuth = false;
         if (uid === pid) {
             isAuth = true
         }
-        if (redirectToHome) {
-            return <Redirect to={`/`} />
-        }
+
         return (
             <div className="container">
                 <h2 className="display-2 mt-5 mb-5" >{post.title}</h2>
