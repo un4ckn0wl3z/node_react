@@ -36,7 +36,6 @@ class ProfileTabs extends Component {
                             )
                         )}
                     </div>
-
                     <div className="col-md-4">
                         <h3 className="text-primary" >Following</h3>
                         <hr />
@@ -80,7 +79,6 @@ class ProfileTabs extends Component {
                                 </div>
                             ))}
                     </div>
-
                 </div>
             </div>
         );
