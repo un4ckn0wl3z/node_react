@@ -51,7 +51,10 @@ class Comment extends Component {
                     <h3 className="text-primary" >{comments.length} Comments</h3>
                     <hr />
                     {comments.map((comment, i) =>
-                        (
+                        {
+                            const posterId = comment.postedBy ? `/user/${comment.postedBy._id}` : "";
+
+                            return (
                             <div key={i} >
 
                                 <div>
@@ -64,14 +67,20 @@ class Comment extends Component {
                                             onError={val => { val.target.src = `${defaultProfileImg}` }}
                                             alt={comment.postedBy.name}
                                             src={`${process.env.REACT_APP_API_PHOTO_URL}/${comment.postedBy._id}?${new Date().getTime()}`} />
-                                        <div>
-                                            <p className="lead">{comment.text}</p>
-                                        </div>
                                     </Link>
+                                    <div>
+                                        <p className="lead">{comment.text}</p>
+                                        <br />
+                                        <p className="font-italic mark">
+                                            Posted by <Link to={`${posterId}`}>{comment.postedBy.name}</Link> on {new Date(comment.created).toDateString()}
+                                        </p>
+                                    </div>
+
                                 </div>
 
                             </div>
-                        )
+                            )
+                    }
                     )}
                 </div>
             </div>
