@@ -107,19 +107,49 @@ exports.deletePost = (req, res) => {
     });
 }
 
+// exports.updatePost = (req, res, next) => {
+//     let post = req.post;
+//     post = _.extend(post, req.body);
+//     post.updated = Date.now();
+//     post.save((err) => {
+//         if (err) {
+//             return res.status(400).send({
+//                 error: 'You are not authorized to perform this action.'
+//             });
+//         }
+//         res.json({
+//             post
+//         });
+//     });
+
+// }
+
 exports.updatePost = (req, res, next) => {
-    let post = req.post;
-    post = _.extend(post, req.body);
-    post.updated = Date.now();
-    post.save((err) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
         if (err) {
-            return res.status(400).send({
-                error: 'You are not authorized to perform this action.'
+            return res.status(400).json({
+                error: 'Image could not be uploaded.'
             });
         }
-        res.json({
-            post
+
+        let post = req.post;
+        post = _.extend(post, fields);
+        post.updated = Date.now();
+        if (files.photo) {
+            post.photo.data = fs.readFileSync(files.photo.path);
+            post.photo.contentType = files.photo.type;
+        }
+        post.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            res.json(post);
         });
+
     });
 
 }
