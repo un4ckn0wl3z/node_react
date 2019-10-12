@@ -40,7 +40,6 @@ class Comment extends Component {
             alert("Please sigin to comment");
             return;
         }
-
         if (this.isValid()) {
             const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
             const postId = this.props.postId;
@@ -64,9 +63,32 @@ class Comment extends Component {
 
     }
 
+
+
+    deleteComment = (comment) => {
+        const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
+        const postId = this.props.postId;
+        const token = isAuthenticated().token ? isAuthenticated().token : '';
+
+        uncomment(userId, token, postId, comment).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.props.updateComments(data.comments);
+            }
+        });
+    }
+
+    deleteConfirmed = (comment) => {
+        let answer = window.confirm("Are you sure you want to delete your comment.");
+        if (answer) {
+            this.deleteComment(comment);
+        }
+    }
+
     render() {
         const { comments } = this.props;
-        const { error , redirectTLogin} = this.state;
+        const { error, redirectTLogin } = this.state;
         if (redirectTLogin) {
             return <Redirect to={`/signin`} />
         }
@@ -106,6 +128,18 @@ class Comment extends Component {
                                         <br />
                                         <p className="font-italic mark">
                                             Posted by <Link to={`${posterId}`}>{comment.postedBy.name}</Link> on {new Date(comment.created).toDateString()}
+                                            <span>
+                                                {
+                                                    isAuthenticated().user && isAuthenticated().user._id === comment.postedBy._id
+                                                    && (
+                                                        <>
+                                                            <button onClick={() => {
+                                                                this.deleteConfirmed(comment);
+                                                            }} className="btn btn-raised btn-sm btn-danger">Remove</button>
+                                                        </>
+                                                    )
+                                                }
+                                            </span>
                                         </p>
                                     </div>
 
