@@ -72,11 +72,11 @@ class SinglePost extends Component {
                 <p className="font-italic mark">
                     Posted by <Link to={`${posterId}`}>{posterName}</Link> on {new Date(post.created).toDateString()}
                 </p>
-                <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
+                <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back to posts</Link>
                 {isAuth && (
                     <>
-                        <button className="btn btn-raised btn-sm btn-warning mr-5">Update</button>
-                        <button onClick={this.deleteConfirmed} className="btn btn-raised btn-sm btn-danger">Delete</button>
+                        <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-sm btn-warning mr-5">Update Post</Link>
+                        <button onClick={this.deleteConfirmed} className="btn btn-raised btn-sm btn-danger">Delete Post</button>
                     </>
                 )}
 
