@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import defaultPostImg from '../img/default-post.jpg';
 import { isAuthenticated } from '../auth';
 import { Redirect } from 'react-router-dom';
+import Comment from './Comment';
 
 class SinglePost extends Component {
 
@@ -15,7 +16,8 @@ class SinglePost extends Component {
             redirectTLogin: false,
             redirectToHome: false,
             like: false,
-            likes: 0
+            likes: 0,
+            comments: []
 
         }
         this.photoUrl = `${process.env.REACT_APP_API_POST_PHOTO_URL}`;
@@ -42,7 +44,8 @@ class SinglePost extends Component {
                     post: data,
                     userAuth,
                     likes: data.likes.length,
-                    like: this.checkLike(data.likes)
+                    like: this.checkLike(data.likes),
+                    comments: data.comments
                 });
             }
         });
@@ -70,6 +73,12 @@ class SinglePost extends Component {
                 });
             }
         });
+    }
+
+    updateComments = (comments) => {
+        this.setState({
+            comments
+        })
     }
 
     deletePost = () => {
@@ -111,9 +120,9 @@ class SinglePost extends Component {
                             {likes} Like
                         </h3>
                     ) : (
-                        <h3 onClick={this.likeToggle}>
-                            <i className="fa fa-thumbs-up text-warning bg-dark" style={{ padding: '10px', borderRadius: '50%' }} />{" "}
-                            {likes} Like
+                            <h3 onClick={this.likeToggle}>
+                                <i className="fa fa-thumbs-up text-warning bg-dark" style={{ padding: '10px', borderRadius: '50%' }} />{" "}
+                                {likes} Like
                         </h3>
                         )
 
@@ -138,7 +147,7 @@ class SinglePost extends Component {
     }
 
     render() {
-        const { post, userAuth, redirectToHome, redirectTLogin } = this.state;
+        const { post, userAuth, redirectToHome, redirectTLogin, comments } = this.state;
         if (redirectTLogin) {
             return <Redirect to={`/signin`} />
         }
@@ -161,6 +170,7 @@ class SinglePost extends Component {
                     </div>
                     : ""}
                 {this.renderPost(post, isAuth)}
+                <Comment postId={post._id} comments={comments} updateComments={this.updateComments} />
             </div>
         );
     }
