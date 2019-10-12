@@ -146,7 +146,7 @@ class EditPost extends Component {
     )
 
     render() {
-        const { id, title, body, redirectToProfile } = this.state;
+        const { id, title, body, redirectToProfile, error, loading } = this.state;
         const photoUrl = id ? `${process.env.REACT_APP_API_POST_PHOTO_URL}/${id}?${new Date().getTime()}` : defaultPostImg;
 
         if (redirectToProfile) {
@@ -155,8 +155,13 @@ class EditPost extends Component {
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5">{title}</h2>
+                <div className="alert alert-danger" style={{ display: error ? "" : 'none' }} >{error}</div>
+                {loading ?
+                    <div className="jumbotron text-center" >
+                        <h2>Loading...</h2>
+                    </div>
+                    : ""}
                 <img onError={val => { val.target.src = `${defaultPostImg}` }} className="img-thumbnail" style={{ height: "200px", width: 'auto' }} src={photoUrl} alt={title} />
-
                 {this.editPostForm(title, body)}
             </div>
         );
