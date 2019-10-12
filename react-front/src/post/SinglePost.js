@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { singlePost } from './apiPost';
 import { Link } from 'react-router-dom';
 import defaultPostImg from '../img/default-post.jpg';
+import { isAuthenticated } from '../auth';
 
 class SinglePost extends Component {
 
     constructor() {
         super();
         this.state = {
-            post: ''
+            post: '',
+            userAuth: ''
         }
         this.photoUrl = `${process.env.REACT_APP_API_POST_PHOTO_URL}`;
     }
@@ -16,20 +18,24 @@ class SinglePost extends Component {
 
     componentDidMount = () => {
         const postId = this.props.match.params.postId;
+        const userAuth = isAuthenticated().user;
+
         singlePost(postId).then(data => {
             if (data.error) {
                 console.log(data.error);
             } else {
                 this.setState({
-                    post: data
+                    post: data,
+                    userAuth
                 });
             }
         });
     }
 
-    renderPost = (post) => {
+    renderPost = (post, isAuth) => {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+
         return (
             <div className="card-body">
                 <img className="img-thumbnail" style={{ height: "200px", width: '100%', objectFit: 'cover' }}
@@ -44,8 +50,12 @@ class SinglePost extends Component {
                     Posted by <Link to={`${posterId}`}>{posterName}</Link> on {new Date(post.created).toDateString()}
                 </p>
                 <Link to={`/`} className="btn btn-raised btn-sm btn-primary mr-5">Back</Link>
-                <button className="btn btn-raised btn-sm btn-warning mr-5">Update</button>
-                <button className="btn btn-raised btn-sm btn-danger">Delete</button>
+                {isAuth && (
+                    <>
+                        <button className="btn btn-raised btn-sm btn-warning mr-5">Update</button>
+                        <button className="btn btn-raised btn-sm btn-danger">Delete</button>
+                    </>
+                )}
 
             </div>
 
@@ -53,7 +63,13 @@ class SinglePost extends Component {
     }
 
     render() {
-        const { post } = this.state;
+        const { post, userAuth } = this.state;
+        const uid = userAuth._id;
+        const pid = post.postedBy ? `${post.postedBy._id}` : "";
+        let isAuth = false;
+        if (uid === pid) {
+            isAuth = true
+        }
         return (
             <div className="container">
                 <h2 className="display-2 mt-5 mb-5" >{post.title}</h2>
@@ -62,7 +78,7 @@ class SinglePost extends Component {
                         <h2>Loading...</h2>
                     </div>
                     : ""}
-                {this.renderPost(post)}
+                {this.renderPost(post, isAuth)}
             </div>
         );
     }
