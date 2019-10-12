@@ -133,9 +133,9 @@ class Comment extends Component {
                                                     isAuthenticated().user && isAuthenticated().user._id === comment.postedBy._id
                                                     && (
                                                         <>
-                                                            <button onClick={() => {
+                                                            <span style={{ cursor: "pointer" }} onClick={() => {
                                                                 this.deleteConfirmed(comment);
-                                                            }} className="btn btn-raised btn-sm btn-danger">Remove</button>
+                                                            }} className="text-danger float-right mr-1">Remove</span>
                                                         </>
                                                     )
                                                 }
