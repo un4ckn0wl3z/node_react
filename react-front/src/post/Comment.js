@@ -3,11 +3,13 @@ import { comment, uncomment } from './apiPost';
 import { isAuthenticated } from '../auth';
 import { Link } from 'react-router-dom';
 import defaultProfileImg from '../img/default-user.png';
+import { Redirect } from 'react-router-dom';
 
 class Comment extends Component {
     state = {
         text: '',
-        error: ''
+        error: '',
+        redirectTLogin: false
     }
 
     handleChange = (event) => {
@@ -30,6 +32,14 @@ class Comment extends Component {
 
     addComment = (event) => {
         event.preventDefault();
+
+        if (!isAuthenticated()) {
+            this.setState({
+                redirectTLogin: true
+            });
+            return;
+        }
+
         if (this.isValid()) {
             const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
             const postId = this.props.postId;
@@ -55,7 +65,10 @@ class Comment extends Component {
 
     render() {
         const { comments } = this.props;
-        const { error } = this.state;
+        const { error , redirectTLogin} = this.state;
+        if (redirectTLogin) {
+            return <Redirect to={`/signin`} />
+        }
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5">Leave a comment</h2>
@@ -88,7 +101,7 @@ class Comment extends Component {
                                             src={`${process.env.REACT_APP_API_PHOTO_URL}/${comment.postedBy._id}?${new Date().getTime()}`} />
                                     </Link>
                                     <div>
-                                        <p className="lead">{comment.text}</p>
+                                        <p className="lead">{comment.text.substring(0, 50) + '...'}</p>
                                         <br />
                                         <p className="font-italic mark">
                                             Posted by <Link to={`${posterId}`}>{comment.postedBy.name}</Link> on {new Date(comment.created).toDateString()}
