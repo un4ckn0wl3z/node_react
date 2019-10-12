@@ -37,6 +37,7 @@ class Comment extends Component {
             this.setState({
                 redirectTLogin: true
             });
+            alert("Please sigin to comment");
             return;
         }
 
