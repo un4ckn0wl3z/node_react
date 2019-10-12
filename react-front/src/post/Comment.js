@@ -6,55 +6,74 @@ import defaultProfileImg from '../img/default-user.png';
 
 class Comment extends Component {
     state = {
-        text: ''
+        text: '',
+        error: ''
     }
 
     handleChange = (event) => {
         this.setState({
-            text: event.target.value
+            text: event.target.value,
+            error: ''
         });
+    }
+
+    isValid = () => {
+        const { text } = this.state;
+        if (!text.length > 0 || text.length > 150) {
+            this.setState({
+                error: 'comment should not be empty and less than 150 characters long'
+            });
+            return false
+        }
+        return true;
     }
 
     addComment = (event) => {
         event.preventDefault();
-        const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
-        const postId = this.props.postId;
-        const token = isAuthenticated().token ? isAuthenticated().token : '';
+        if (this.isValid()) {
+            const userId = isAuthenticated().user ? isAuthenticated().user._id : '';
+            const postId = this.props.postId;
+            const token = isAuthenticated().token ? isAuthenticated().token : '';
 
-        comment(userId, token, postId, {
-            text: this.state.text
-        }).then(data => {
-            if (data.error) {
-                console.log(data.error);
-            } else {
-                this.setState({
-                    text: ''
-                });
-                //dispatch comment
-                this.props.updateComments(data.comments);
-            }
-        });
+            comment(userId, token, postId, {
+                text: this.state.text
+            }).then(data => {
+                if (data.error) {
+                    console.log(data.error);
+                } else {
+                    this.setState({
+                        text: ''
+                    });
+                    //dispatch comment
+                    this.props.updateComments(data.comments);
+                }
+            });
+        }
+
 
     }
 
     render() {
         const { comments } = this.props;
+        const { error } = this.state;
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5">Leave a comment</h2>
+                <div className="alert alert-danger" style={{ display: error ? "" : 'none' }} >{error}</div>
+
                 <form onSubmit={this.addComment}>
                     <div className="form-group">
                         <input type="text" onChange={this.handleChange} className="form-control" value={this.state.text} />
+                        <button className="btn btn-raised btn-success mt-2" >Post</button>
                     </div>
                 </form>
-                <div className="col-md-8 col-md-offset-2">
+                <div className="col-md-12">
                     <h3 className="text-primary" >{comments.length} Comments</h3>
                     <hr />
-                    {comments.map((comment, i) =>
-                        {
-                            const posterId = comment.postedBy ? `/user/${comment.postedBy._id}` : "";
+                    {comments.map((comment, i) => {
+                        const posterId = comment.postedBy ? `/user/${comment.postedBy._id}` : "";
 
-                            return (
+                        return (
                             <div key={i} >
 
                                 <div>
@@ -79,7 +98,7 @@ class Comment extends Component {
                                 </div>
 
                             </div>
-                            )
+                        )
                     }
                     )}
                 </div>

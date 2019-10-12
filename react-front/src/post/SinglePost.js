@@ -170,7 +170,7 @@ class SinglePost extends Component {
                     </div>
                     : ""}
                 {this.renderPost(post, isAuth)}
-                <Comment postId={post._id} comments={comments} updateComments={this.updateComments} />
+                <Comment postId={post._id} comments={comments.reverse()} updateComments={this.updateComments} />
             </div>
         );
     }
